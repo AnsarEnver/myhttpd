@@ -2,10 +2,12 @@
 
 #include "resource.h"
 
+extern const char *mime_types[343][2];
+
 resource::resource(
     std::string root, 
     std::map<std::string, std::string> &&mapping_table
-):_mapping_table(mapping_table){
+):_mapping_table(std::move(mapping_table)){
     for(int i = 0; i < sizeof(mime_types) / sizeof(_mime_types[0]); i++){
         this->_mime_types.insert({mime_types[i][0], mime_types[i][1]});
     }
@@ -28,7 +30,7 @@ std::string resource::mapping(std::string url){
     }
 }
 
-const char *mime_types[345][2] = {
+const char *mime_types[343][2] = {
     {".001", "application/x-001"},
     {".301", "application/x-301"},
     {".323", "text/h323"},
@@ -106,8 +108,7 @@ const char *mime_types[345][2] = {
     {".frm", "application/x-frm"},
     {".g4", "application/x-g4"},
     {".gbr", "application/x-gbr"},
-    {"."},
-    {"application/x-"},
+    {".", "application/x-"},
     {".gif", "image/gif"},
     {".gl2", "application/x-gl2"},
     {".gp4", "application/x-gp4"},

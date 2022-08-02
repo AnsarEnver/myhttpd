@@ -4,8 +4,6 @@
 #include <string>
 #include <map>
 
-extern const char *mime_types[345][2];
-
 class resource {
 private:
     std::string _root;

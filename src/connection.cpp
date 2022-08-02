@@ -16,7 +16,8 @@ connection::connection(
     boost::asio::ip::tcp::socket &&socket,
     boost::asio::io_service &io_service, 
     resource &resource_,
-    close_handler handler)
+    close_handler handler
+)
 :_socket(std::move(socket)),
 _client_id(boost::uuids::random_generator()()),
 _io_service(_io_service),

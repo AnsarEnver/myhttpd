@@ -7,7 +7,8 @@
 
 void receiver::read_header_handler(
     const boost::system::error_code& error, 
-    std::size_t bytes_transferred){
+    std::size_t bytes_transferred
+){
     if(!error){
         const char *raw_buf = 
             boost::asio::buffer_cast<const char*>(this->_buffer.data());

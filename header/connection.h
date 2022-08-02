@@ -21,10 +21,10 @@ private:
     boost::asio::io_service &_io_service;
     resource &_resource;
     boost::asio::ip::tcp::socket _socket;
+    request *_req;
+    close_handler _close_handler;
     receiver _receiver;
     sender _sender;
-    close_handler _close_handler;
-    request *_req;
 
 private:
     void receive_handler(request *req);
