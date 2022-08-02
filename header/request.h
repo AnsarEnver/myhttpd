@@ -8,6 +8,7 @@ struct request {
     boost::asio::mutable_buffer *_content = nullptr;
     std::string method();
     std::string url();
+    std::string query_string();
     std::string version();
     std::string header(std::string name);
     request(const char* header_data, std::size_t size);

@@ -4,14 +4,12 @@
 #include "myhttpd.h"
 
 void myhttpd::connect_handler(boost::asio::ip::tcp::socket *socket){
-    this->connections_lock.lock();
     auto conn = new connection(
         std::move(*socket), 
         this->_io_service, 
+        this->_resource,
         this->_close_handler
     );
-    this->connections.insert({conn->id(), conn});
-    this->connections_lock.unlock();
     delete socket;
     conn->do_service();
 }
@@ -19,17 +17,6 @@ void myhttpd::connect_handler(boost::asio::ip::tcp::socket *socket){
 void myhttpd::close_handler(connection *conn){
     
 }
-
-myhttpd::myhttpd(int thread_number, std::string ipv4_addr, int port)
-:_acceptor(
-    ipv4_addr,
-    port,
-    this->_io_service,
-    std::bind(&myhttpd::connect_handler, this, std::placeholders::_1)
-),
-_work(boost::asio::io_service::work(this->_io_service)),
-_thread_number(thread_number),
-_close_handler(std::bind(&myhttpd::close_handler, this, std::placeholders::_1)){}
 
 void myhttpd::work(){
     std::cout << "worker started.\n";
@@ -55,8 +42,27 @@ void myhttpd::join(){
     );
 }
 
+myhttpd::myhttpd(
+    int thread_number, 
+    std::string ipv4_addr, 
+    int port, 
+    std::string root, 
+    std::map<std::string, std::string> &&mapping_table
+)
+:_acceptor(
+    ipv4_addr,
+    port,
+    this->_io_service,
+    std::bind(&myhttpd::connect_handler, this, std::placeholders::_1)
+),
+_resource(root, mapping_table),
+_work(boost::asio::io_service::work(this->_io_service)),
+_thread_number(thread_number),
+_close_handler(std::bind(&myhttpd::close_handler, this, std::placeholders::_1)){}
+
 int main(int argc, char *argv[]) {
-    myhttpd _myhttpd(64, "127.0.0.1", 80);
+    std::map<std::string, std::string> mapping_table;
+    myhttpd _myhttpd(4, "127.0.0.1", 80, "D:/web_root", std::move(mapping_table));
     _myhttpd.start();
     _myhttpd.join();
 }

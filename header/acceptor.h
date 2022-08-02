@@ -11,6 +11,7 @@ public:
     typedef 
         std::function<void(boost::asio::ip::tcp::socket*)> 
             connect_handler;
+
 private:
     boost::asio::io_service &_io_service;
     boost::asio::ip::tcp::acceptor _acceptor;
@@ -34,7 +35,6 @@ public:
         connect_handler handler
     );
     void start_accept();
-    
 };
 
 #endif /* ACCEPTOR_Hs */

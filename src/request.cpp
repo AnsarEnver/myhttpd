@@ -16,7 +16,25 @@ std::string request::url(){
     std::string url_str;
     std::getline(ss, url_str, ' ');
     std::getline(ss, url_str, ' ');
-    return url_str;
+    int url_len = 0;
+    for(; url_len < url_str.size(); url_len++){
+        if(url_str[url_len] == '?') break;
+    }
+    return url_str.substr(0,url_len);
+}
+
+std::string request::query_string(){
+    std::istringstream ss(this->_header);
+    std::string url_str;
+    std::getline(ss, url_str, ' ');
+    std::getline(ss, url_str, ' ');
+    int url_len = 0;
+    for(; url_len < url_str.size(); url_len++){
+        if(url_str[url_len] == '?'){
+            return url_str.substr(url_len + 1, url_str.size() - url_len - 1);
+        }
+    }
+    return std::string("");
 }
 
 std::string request::version(){

@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 
+#include "resource.h"
 #include "acceptor.h"
 #include "connection.h"
 
@@ -15,20 +16,25 @@ class myhttpd {
 private:
     boost::asio::io_service _io_service;
     boost::asio::io_service::work _work;
-    std::map<connection::connection_id, connection*> connections;
-    boost::mutex connections_lock;
     acceptor _acceptor;
+    resource _resource;
     std::vector<boost::thread> worker_threads;
     int _thread_number;
     connection::close_handler _close_handler;
-    
+
 private:
     void work();
     void connect_handler(boost::asio::ip::tcp::socket *socket);
     void close_handler(connection *conn);
 
 public:
-    myhttpd(int thread_number, std::string ipv4_addr, int port);
+    myhttpd(
+        int thread_number, 
+        std::string ipv4_addr, 
+        int port, 
+        std::string root, 
+        std::map<std::string, std::string> &&mapping_table
+    );
     void start();
     void join();
 };

@@ -23,6 +23,7 @@ private:
         _read_header_handler;
     std::function<void (const boost::system::error_code&, std::size_t)> 
         _read_content_handler;
+        
 private:
     void read_header_handler(
         const boost::system::error_code& error, 

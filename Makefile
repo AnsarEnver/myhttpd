@@ -1,10 +1,10 @@
 CC = g++
-CFLAGS = -c -O3 -I header/
+CFLAGS = -c -O3 -I"./header" -I"D:\utils\boost\include"
 OBJ = build/myhttpd.o build/acceptor.o build/connection.o \
 build/receiver.o build/request.o
 
 build/myhttpd: $(OBJ)
-	$(CC) $^ -lpthread -lboost_thread -lws2_32 -lmswsock -lbcrypt -o $@
+	$(CC) $^ -L"D:\utils\boost\lib" -lpthread -lboost_thread-mgw12-mt-s-x64-1_79 -lws2_32 -lmswsock -lbcrypt -o $@
 
 build/myhttpd.o: src/myhttpd.cpp header/myhttpd.h
 	$(CC) $(CFLAGS) $< -o $@

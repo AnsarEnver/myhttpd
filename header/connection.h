@@ -7,6 +7,9 @@
 #include <functional>
 
 #include "receiver.h"
+#include "sender.h"
+#include "resource.h"
+#include "handler.h"
 
 class connection {
 public:
@@ -16,9 +19,12 @@ public:
 private:
     connection_id _client_id;
     boost::asio::io_service &_io_service;
+    resource &_resource;
     boost::asio::ip::tcp::socket _socket;
     receiver _receiver;
+    sender _sender;
     close_handler _close_handler;
+    request *_req;
 
 private:
     void receive_handler(request *req);
@@ -27,6 +33,7 @@ public:
     connection(
         boost::asio::ip::tcp::socket &&socket,
         boost::asio::io_service &io_service,
+        resource &resource_,
         close_handler handler);
     void do_service();
     connection_id id();

@@ -2,18 +2,22 @@
 #define RESOURCE_H
 
 #include <string>
+#include <map>
 
-#include "mime_types.h"
-#include "mapper.h"
+extern const char *mime_types[345][2];
 
 class resource {
 private:
-    mapper _mapper;
     std::string _root;
+    std::map<std::string, std::string> _mapping_table;
     std::map<std::string, std::string> _mime_types;
-public:
+
+private:
+    std::string mapping(std::string url);
     bool exists(std::string url);
-    resource(std::string root, std::map<std::string, std::string> table);
+
+public:
+    resource(std::string root, std::map<std::string, std::string> &&mapping_table);
 };
 
 #endif /* RESOURCE */

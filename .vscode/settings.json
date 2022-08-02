@@ -74,6 +74,7 @@
         "variant": "cpp",
         "*.ipp": "cpp",
         "iostream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "fstream": "cpp"
     }
 }

@@ -14,11 +14,13 @@ void connection::receive_handler(request *req){
 
 connection::connection(
     boost::asio::ip::tcp::socket &&socket,
-    boost::asio::io_service &io_service,
+    boost::asio::io_service &io_service, 
+    resource &resource_,
     close_handler handler)
 :_socket(std::move(socket)),
 _client_id(boost::uuids::random_generator()()),
 _io_service(_io_service),
+_resource(resource_),
 _receiver(this->_socket),
 _close_handler(handler){}
 
