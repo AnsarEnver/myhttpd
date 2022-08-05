@@ -4,8 +4,12 @@ OBJ = build/myhttpd.o build/acceptor.o build/connection.o \
 build/receiver.o build/request.o build/resource.o build/sender.o \
 build/handler.o
 
-LIB = -L"D:\utils\boost\lib" -lpthread -lboost_thread-mgw12-mt-s-x64-1_79 \
--lws2_32 -lmswsock -lbcrypt -lboost_filesystem-mgw12-mt-x64-1_79
+LIBBOOST_THREAD = -lboost_thread-mgw12-mt-s-x64-1_79
+LIBBOOST_FILESYSTEM = -lboost_filesystem-mgw12-mt-x64-1_79
+
+LIB = -L"D:\utils\boost\lib" -lpthread -lws2_32 -lmswsock -lbcrypt \
+$(LIBBOOST_THREAD) $(LIBBOOST_FILESYSTEM)
+ 
 
 build/myhttpd: $(OBJ)
 	$(CC) $^ $(LIB) -o $@
@@ -34,6 +38,8 @@ build/sender.o: src/sender.cpp header/sender.h
 build/handler.o: src/handler.cpp header/handler.h
 	$(CC) $(CFLAGS) $< -o $@
 
+build/static_content.o: src/static_content.cpp header/static_content.h
+	$(CC) $(CFLAGS) $< -o $@
+
 clean:
 	@rm build/*
-	

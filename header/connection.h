@@ -18,16 +18,23 @@ public:
 
 private:
     connection_id _client_id;
+    boost::asio::ip::tcp::socket _socket;
     boost::asio::io_service &_io_service;
     resource &_resource;
-    boost::asio::ip::tcp::socket _socket;
-    request *_req;
-    close_handler _close_handler;
+    request *_req = nullptr;
+    response *_res  = nullptr;
     receiver _receiver;
     sender _sender;
+    handler _handler;
+    close_handler _close_handler;
+    receiver::receive_handler _receive_handler;
+    handler::response_handler _response_handler;
+    sender::send_handler _send_handler;
 
 private:
     void receive_handler(request *req);
+    void response_handler(response *res);
+    void send_handler();
 
 public:
     connection(

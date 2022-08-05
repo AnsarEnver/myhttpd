@@ -1,13 +1,17 @@
 #include <boost/filesystem.hpp>
+#include <regex>
 
 #include "resource.h"
+#include "static_content.h"
 
 extern const char *mime_types[343][2];
 
 resource::resource(
+    boost::asio::io_service &io_service,
     std::string root, 
     std::map<std::string, std::string> &&mapping_table
-):_mapping_table(std::move(mapping_table)){
+):_mapping_table(std::move(mapping_table)),
+_io_service(io_service){
     for(int i = 0; i < sizeof(mime_types) / sizeof(_mime_types[0]); i++){
         this->_mime_types.insert({mime_types[i][0], mime_types[i][1]});
     }
@@ -15,6 +19,22 @@ resource::resource(
         this->_root = root.substr(root.size() - 1);
     }else{
         this->_root = root;
+    }
+}
+
+std::string resource::url_to_path(std::string url){
+    return this->_root + url;
+}
+
+void resource::async_build_content(request &req, response &res, build_handler handler){
+    std::string url = this->mapping(req.url());
+    if(!this->exists(url)){
+        this->_io_service.post(std::bind(handler, status::NOT_EXISTS));
+    }else{
+        res.content = new static_content(this->url_to_path(url));
+        std::size_t size = res.content->buffer()->size();
+        res.header["Content-Type"] = this->mime_type(url);
+        this->_io_service.post(std::bind(handler, status::SUCCESS));
     }
 }
 
@@ -27,6 +47,20 @@ std::string resource::mapping(std::string url){
         return url;
     }else{
         return this->_mapping_table[url];
+    }
+}
+
+std::string resource::mime_type(std::string url){
+    std::regex pattern("\.\\w+$");
+    std::smatch match;
+    if(!std::regex_search(url, match, pattern)){
+        return this->_mime_types["."];
+    }else{
+        if(this->_mime_types.count(match[0]) == 0){
+            return "";
+        }else{
+            return this->_mime_types[match[0]];
+        }
     }
 }
 

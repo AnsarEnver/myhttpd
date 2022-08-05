@@ -26,9 +26,9 @@ void myhttpd::work(){
 void myhttpd::start(){
     this->_acceptor.start_accept();
     for(int i = 0; i < this->_thread_number; i++){
-        this->worker_threads.push_back(boost::thread(
-            std::bind(&myhttpd::work, this)
-        ));
+        this->worker_threads.push_back(
+            boost::thread(std::bind(&myhttpd::work, this))
+        );
     }
 }
 
@@ -55,7 +55,7 @@ myhttpd::myhttpd(
     this->_io_service,
     std::bind(&myhttpd::connect_handler, this, std::placeholders::_1)
 ),
-_resource(root, std::move(mapping_table)),
+_resource(this->_io_service, root, std::move(mapping_table)),
 _work(boost::asio::io_service::work(this->_io_service)),
 _thread_number(thread_number),
 _close_handler(std::bind(&myhttpd::close_handler, this, std::placeholders::_1)){}
