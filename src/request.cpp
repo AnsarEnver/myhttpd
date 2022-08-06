@@ -58,14 +58,30 @@ std::string request::header(std::string name){
     }
 }
 
-request::request(const char* header_data, std::size_t size){
-    char* this_header_data = new char[size];
-    std::memcpy(this_header_data, header_data, size);
-    this->_header = std::string(this_header_data, size);
+void request::set_content(boost::asio::const_buffer &&buf){
+    this->_has_content = true;
+    this->_content = boost::asio::const_buffer(std::move(buf));
 }
 
+bool request::has_content(){
+    return this->_has_content;
+}
+
+boost::asio::const_buffer& request::get_content(){
+    return this->_content;
+}
+
+request::request(const char* header_data, std::size_t size):_content(){
+    this->_header = std::string(header_data, size);
+}
+
+request::request(request &&req)
+:_header(std::move(req._header)),
+_content(std::move(req._content)),
+_has_content(req._has_content){}
+
 request::~request(){
-    if(this->_content != nullptr){
-        delete this->_content;
+    if(this->_has_content){
+        delete this->_content.data();
     }
 }

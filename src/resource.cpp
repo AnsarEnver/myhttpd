@@ -29,8 +29,10 @@ std::string resource::url_to_path(std::string url){
 void resource::async_build_content(request &req, response &res, build_handler handler){
     std::string url = this->mapping(req.url());
     if(!this->exists(url)){
+        res._status_code = 404;
         this->_io_service.post(std::bind(handler, status::NOT_EXISTS));
     }else{
+        res._status_code = 200;
         res.content = new static_content(this->url_to_path(url));
         std::size_t size = res.content->buffer()->size();
         res.header["Content-Type"] = this->mime_type(url);
@@ -51,7 +53,7 @@ std::string resource::mapping(std::string url){
 }
 
 std::string resource::mime_type(std::string url){
-    std::regex pattern("\.\\w+$");
+    std::regex pattern("\\.\\w+$");
     std::smatch match;
     if(!std::regex_search(url, match, pattern)){
         return this->_mime_types["."];

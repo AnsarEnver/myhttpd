@@ -19,7 +19,7 @@ private:
     response_handler _respons_handler;
 
 private:
-    void build_handler();
+    void build_handler(resource::status code);
     void get();
     void post();
     void head();

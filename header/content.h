@@ -6,6 +6,7 @@
 class content {
 public:
     virtual boost::asio::const_buffer* buffer() = 0;
+    virtual ~content();
 };
 
 #endif /* CONTENT_H */

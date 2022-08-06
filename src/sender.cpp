@@ -143,7 +143,7 @@ void sender::header_write_handler(
             this->_send_handler();
         }else{
             this->_socket.async_write_some(
-                this->_content_buffer, 
+                *this->_content_buffer, 
                 std::bind(
                     &sender::content_write_handler,
                     this,
@@ -182,7 +182,7 @@ void sender::async_send(response *res, send_handler handler){
     std::memcpy(buf, header_str.data(), size);
     this->_header_buffer = new boost::asio::const_buffer(buf, size);
     this->_socket.async_write_some(
-        this->_header_buffer, 
+        *this->_header_buffer, 
         std::bind(
             &sender::header_write_handler,
             this,

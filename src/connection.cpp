@@ -11,18 +11,14 @@ void connection::receive_handler(request *req){
 
 void connection::response_handler(response *res){
     this->_res = res;
+    res->header["Connection"] = "close";
+    res->header["Server"] = "Ansar's Myhttpd/0.1.0";
     this->_sender.async_send(res, this->_send_handler);
 }
 
 void connection::send_handler(){
-    // bool keep_alive = (this->_req->header("Connection").compare("Keep-alive") == 0);
-    // delete this->_req;
-    // delete this->_res;
-    // if(keep_alive){
-    //     this->_receiver.async_receive(this->_receive_handler);
-    // }else{
-    //     delete this;
-    // }
+    delete this->_req;
+    delete this->_res;
     delete this;
 }
 
@@ -59,5 +55,6 @@ connection::connection_id connection::id(){
 }
 
 connection::~connection(){
+
     this->_socket.close();
 }

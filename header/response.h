@@ -11,6 +11,7 @@ struct response {
     int _status_code;
     std::map<std::string, std::string> header;
     content *content = nullptr;
+    ~response();
 };
 
 #endif /* RESPONSE_H */

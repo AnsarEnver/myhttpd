@@ -12,8 +12,9 @@ private:
     boost::interprocess::file_mapping _file;
     boost::interprocess::mapped_region _region;
 public:
-    boost::asio::const_buffer* buffer() override;
+    boost::asio::const_buffer* buffer();
     static_content(std::string path);
+    ~static_content();
 };
 
 #endif /* STATIC_CONTENT */

@@ -2,7 +2,8 @@ CC = g++
 CFLAGS = -c -g3 -I"./header" -I"D:\utils\boost\include"
 OBJ = build/myhttpd.o build/acceptor.o build/connection.o \
 build/receiver.o build/request.o build/resource.o build/sender.o \
-build/handler.o
+build/handler.o build/static_content.o build/entry.o build/response.o \
+build/content.o
 
 LIBBOOST_THREAD = -lboost_thread-mgw12-mt-s-x64-1_79
 LIBBOOST_FILESYSTEM = -lboost_filesystem-mgw12-mt-x64-1_79
@@ -10,7 +11,6 @@ LIBBOOST_FILESYSTEM = -lboost_filesystem-mgw12-mt-x64-1_79
 LIB = -L"D:\utils\boost\lib" -lpthread -lws2_32 -lmswsock -lbcrypt \
 $(LIBBOOST_THREAD) $(LIBBOOST_FILESYSTEM)
  
-
 build/myhttpd: $(OBJ)
 	$(CC) $^ $(LIB) -o $@
 
@@ -39,6 +39,15 @@ build/handler.o: src/handler.cpp header/handler.h
 	$(CC) $(CFLAGS) $< -o $@
 
 build/static_content.o: src/static_content.cpp header/static_content.h
+	$(CC) $(CFLAGS) $< -o $@
+
+build/entry.o: src/entry.cpp header/myhttpd.h
+	$(CC) $(CFLAGS) $< -o $@
+
+build/response.o: src/response.cpp header/response.h
+	$(CC) $(CFLAGS) $< -o $@
+
+build/content.o: src/content.cpp header/content.h
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:

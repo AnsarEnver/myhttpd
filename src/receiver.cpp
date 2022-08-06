@@ -45,12 +45,15 @@ void receiver::read_content_handler(
     const boost::system::error_code& error, 
     std::size_t bytes_transferred){
     if(!error){
-        const char *buf = 
-            boost::asio::buffer_cast<const char*>(this->_buffer.data());
         int size = this->_buffer.size();
         char *content = new char[size];
-        std::memcpy(content, buf, size);
-        this->req->_content = new boost::asio::mutable_buffer(content, size);
+        std::memcpy(
+            content, 
+            boost::asio::buffer_cast<const char*>(this->_buffer.data()), 
+            size
+        );
+        boost::asio::const_buffer const_buf(content, size);
+        req->set_content(std::move(const_buf));
         this->_buffer.consume(size);
         this->_receive_handler(this->req);
     }

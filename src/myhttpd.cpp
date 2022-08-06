@@ -59,10 +59,3 @@ _resource(this->_io_service, root, std::move(mapping_table)),
 _work(boost::asio::io_service::work(this->_io_service)),
 _thread_number(thread_number),
 _close_handler(std::bind(&myhttpd::close_handler, this, std::placeholders::_1)){}
-
-int main(int argc, char *argv[]){
-    std::map<std::string, std::string> mapping_table;
-    myhttpd _myhttpd(4, "127.0.0.1", 80, "D:/web_root", std::move(mapping_table));
-    _myhttpd.start();
-    _myhttpd.join();
-}
